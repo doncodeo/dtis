@@ -3,12 +3,12 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/auth.php';
 
 if (Auth::isLoggedIn() && Auth::isVerified()) {
-    header("Location: /dashboard.php");
+    header("Location: " . BASE_URL . "dashboard.php");
     exit;
 }
 
 if (!Auth::isLoggedIn()) {
-    header("Location: /login.php?redirect=/verify.php");
+    header("Location: " . BASE_URL . "login.php?redirect=" . BASE_URL . "verify.php");
     exit;
 }
 
@@ -69,7 +69,7 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="alert alert-success">
                     Your account has been verified successfully!
                 </div>
-                <a href="/dashboard.php" class="btn btn-primary btn-block">Continue to Dashboard</a>
+                <a href="<?= BASE_URL ?>dashboard.php" class="btn btn-primary btn-block">Continue to Dashboard</a>
             <?php else: ?>
                 <?php if (!empty($errors)): ?>
                     <div class="alert alert-danger">

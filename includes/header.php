@@ -12,13 +12,13 @@ if (!isset($pageTitle)) {
     <title><?= htmlspecialchars($pageTitle) ?> | DTIS</title>
     
     <!-- Favicon -->
-    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="<?= BASE_URL ?>assets/images/favicon.ico" type="image/x-icon">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/main.css">
     <?php if (isset($additionalCSS)): ?>
         <?php foreach ($additionalCSS as $cssFile): ?>
-            <link rel="stylesheet" href="/assets/css/<?= $cssFile ?>">
+            <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/<?= $cssFile ?>">
         <?php endforeach; ?>
     <?php endif; ?>
     
@@ -33,8 +33,8 @@ if (!isset($pageTitle)) {
         <div class="container">
             <nav class="navbar">
                 <div class="logo">
-                    <a href="/">
-                        <img src="/assets/images/logo.png" alt="DTIS Logo">
+                    <a href="<?= BASE_URL ?>">
+                        <img src="<?= BASE_URL ?>assets/images/logo.png" alt="DTIS Logo">
                         <h1>DTIS</h1>
                     </a>
                 </div>
@@ -44,16 +44,16 @@ if (!isset($pageTitle)) {
                 </button>
                 
                 <ul class="nav-links d-none d-md-flex">
-                    <li><a href="/search.php">Threat Database</a></li>
+                    <li><a href="<?= BASE_URL ?>search.php">Threat Database</a></li>
                     <?php if (Auth::isLoggedIn()): ?>
                         <?php if (Auth::isAdmin()): ?>
-                            <li><a href="/admin/dashboard.php">Admin</a></li>
+                            <li><a href="<?= BASE_URL ?>admin/dashboard.php">Admin</a></li>
                         <?php endif; ?>
-                        <li><a href="/dashboard.php">Dashboard</a></li>
-                        <li><a href="/logout.php">Logout</a></li>
+                        <li><a href="<?= BASE_URL ?>dashboard.php">Dashboard</a></li>
+                        <li><a href="<?= BASE_URL ?>logout.php">Logout</a></li>
                     <?php else: ?>
-                        <li><a href="/login.php">Login</a></li>
-                        <li><a href="/register.php">Register</a></li>
+                        <li><a href="<?= BASE_URL ?>login.php">Login</a></li>
+                        <li><a href="<?= BASE_URL ?>register.php">Register</a></li>
                     <?php endif; ?>
                 </ul>
             </nav>
@@ -61,16 +61,16 @@ if (!isset($pageTitle)) {
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="d-md-none hidden mt-3">
                 <div class="list-group">
-                    <a href="/search.php" class="list-group-item list-group-item-action">Threat Database</a>
+                    <a href="<?= BASE_URL ?>search.php" class="list-group-item list-group-item-action">Threat Database</a>
                     <?php if (Auth::isLoggedIn()): ?>
                         <?php if (Auth::isAdmin()): ?>
-                            <a href="/admin/dashboard.php" class="list-group-item list-group-item-action">Admin</a>
+                            <a href="<?= BASE_URL ?>admin/dashboard.php" class="list-group-item list-group-item-action">Admin</a>
                         <?php endif; ?>
-                        <a href="/dashboard.php" class="list-group-item list-group-item-action">Dashboard</a>
-                        <a href="/logout.php" class="list-group-item list-group-item-action">Logout</a>
+                        <a href="<?= BASE_URL ?>dashboard.php" class="list-group-item list-group-item-action">Dashboard</a>
+                        <a href="<?= BASE_URL ?>logout.php" class="list-group-item list-group-item-action">Logout</a>
                     <?php else: ?>
-                        <a href="/login.php" class="list-group-item list-group-item-action">Login</a>
-                        <a href="/register.php" class="list-group-item list-group-item-action">Register</a>
+                        <a href="<?= BASE_URL ?>login.php" class="list-group-item list-group-item-action">Login</a>
+                        <a href="<?= BASE_URL ?>register.php" class="list-group-item list-group-item-action">Register</a>
                     <?php endif; ?>
                 </div>
             </div>

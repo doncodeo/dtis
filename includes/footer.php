@@ -10,17 +10,17 @@
                     <div class="col-md-4">
                         <h5>Quick Links</h5>
                         <ul class="list-unstyled">
-                            <li><a href="/search.php" class="text-white">Threat Database</a></li>
-                            <li><a href="/report.php" class="text-white">Report a Threat</a></li>
-                            <li><a href="/appeal.php" class="text-white">Submit an Appeal</a></li>
+                            <li><a href="<?= BASE_URL ?>search.php" class="text-white">Threat Database</a></li>
+                            <li><a href="<?= BASE_URL ?>report.php" class="text-white">Report a Threat</a></li>
+                            <li><a href="<?= BASE_URL ?>appeal.php" class="text-white">Submit an Appeal</a></li>
                         </ul>
                     </div>
                     <div class="col-md-4">
                         <h5>Legal</h5>
                         <ul class="list-unstyled">
-                            <li><a href="/terms.php" class="text-white">Terms of Service</a></li>
-                            <li><a href="/privacy.php" class="text-white">Privacy Policy</a></li>
-                            <li><a href="/contact.php" class="text-white">Contact Us</a></li>
+                            <li><a href="<?= BASE_URL ?>terms.php" class="text-white">Terms of Service</a></li>
+                            <li><a href="<?= BASE_URL ?>privacy.php" class="text-white">Privacy Policy</a></li>
+                            <li><a href="<?= BASE_URL ?>contact.php" class="text-white">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -31,11 +31,11 @@
         </footer>
         
         <!-- JavaScript -->
-        <script src="/assets/js/main.js"></script>
-        <script src="/assets/js/form-validation.js"></script>
+        <script src="<?= BASE_URL ?>assets/js/main.js"></script>
+        <script src="<?= BASE_URL ?>assets/js/form-validation.js"></script>
         <?php if (isset($additionalJS)): ?>
             <?php foreach ($additionalJS as $jsFile): ?>
-                <script src="/assets/js/<?= $jsFile ?>"></script>
+                <script src="<?= BASE_URL ?>assets/js/<?= $jsFile ?>"></script>
             <?php endforeach; ?>
         <?php endif; ?>
     </body>

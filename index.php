@@ -51,15 +51,15 @@ try {
                         </div>
                     </div>
                 </div>
-                <a href="/search.php" class="btn btn-primary btn-lg mr-3">
+                <a href="<?= BASE_URL ?>search.php" class="btn btn-primary btn-lg mr-3">
                     <i class="fas fa-search"></i> Search Threats
                 </a>
                 <?php if (Auth::isLoggedIn()): ?>
-                    <a href="/dashboard.php" class="btn btn-secondary btn-lg">
+                    <a href="<?= BASE_URL ?>dashboard.php" class="btn btn-secondary btn-lg">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                 <?php else: ?>
-                    <a href="/register.php" class="btn btn-secondary btn-lg">
+                    <a href="<?= BASE_URL ?>register.php" class="btn btn-secondary btn-lg">
                         <i class="fas fa-user-plus"></i> Join Now
                     </a>
                 <?php endif; ?>
@@ -77,7 +77,7 @@ try {
                     <div class="card-body">
                         <div class="list-group">
                             <?php foreach ($recentThreats as $threat): ?>
-                                <a href="/threats/details.php?id=<?= $threat['threat_id'] ?>" 
+                                <a href="<?= BASE_URL ?>threats/details.php?id=<?= $threat['threat_id'] ?>"
                                    class="list-group-item list-group-item-action">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1"><?= htmlspecialchars($threat['entity']) ?></h5>
@@ -90,7 +90,7 @@ try {
                         </div>
                     </div>
                     <div class="card-footer text-center">
-                        <a href="/search.php" class="btn btn-primary">View All Threats</a>
+                        <a href="<?= BASE_URL ?>search.php" class="btn btn-primary">View All Threats</a>
                     </div>
                 </div>
             </div>

@@ -3,7 +3,7 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/auth.php';
 
 if (!Auth::isLoggedIn()) {
-    header("Location: /login.php");
+    header("Location: " . BASE_URL . "login.php");
     exit;
 }
 
@@ -53,18 +53,18 @@ require_once __DIR__ . '/includes/header.php';
                     <p class="text-muted">Member since <?= date('M Y', strtotime($user['created_at'] ?? 'now')) ?></p>
                     
                     <div class="list-group">
-                        <a href="/report.php" class="list-group-item list-group-item-action">
+                        <a href="<?= BASE_URL ?>report.php" class="list-group-item list-group-item-action">
                             <i class="fas fa-plus-circle mr-2"></i> Report New Threat
                         </a>
-                        <a href="/search.php" class="list-group-item list-group-item-action">
+                        <a href="<?= BASE_URL ?>search.php" class="list-group-item list-group-item-action">
                             <i class="fas fa-search mr-2"></i> Search Threats
                         </a>
                         <?php if (Auth::isAdmin()): ?>
-                            <a href="/admin/dashboard.php" class="list-group-item list-group-item-action">
+                            <a href="<?= BASE_URL ?>admin/dashboard.php" class="list-group-item list-group-item-action">
                                 <i class="fas fa-cog mr-2"></i> Admin Dashboard
                             </a>
                         <?php endif; ?>
-                        <a href="/logout.php" class="list-group-item list-group-item-action text-danger">
+                        <a href="<?= BASE_URL ?>logout.php" class="list-group-item list-group-item-action text-danger">
                             <i class="fas fa-sign-out-alt mr-2"></i> Logout
                         </a>
                     </div>
@@ -91,7 +91,7 @@ require_once __DIR__ . '/includes/header.php';
                     <?php if (empty($recentSubmissions)): ?>
                         <div class="alert alert-info">
                             You haven't submitted any threats yet. 
-                            <a href="/report.php" class="alert-link">Report your first threat</a> to help protect others.
+                            <a href="<?= BASE_URL ?>report.php" class="alert-link">Report your first threat</a> to help protect others.
                         </div>
                     <?php else: ?>
                         <div class="table-responsive">
@@ -108,7 +108,7 @@ require_once __DIR__ . '/includes/header.php';
                                     <?php foreach ($recentSubmissions as $submission): ?>
                                         <tr>
                                             <td>
-                                                <a href="/threats/details.php?id=<?= $submission['threat_id'] ?>">
+                                                <a href="<?= BASE_URL ?>threats/details.php?id=<?= $submission['threat_id'] ?>">
                                                     <?= htmlspecialchars($submission['entity']) ?>
                                                 </a>
                                             </td>
@@ -127,7 +127,7 @@ require_once __DIR__ . '/includes/header.php';
                             </table>
                         </div>
                         <div class="text-right">
-                            <a href="/user/submissions.php" class="btn btn-sm btn-primary">View All</a>
+                            <a href="<?= BASE_URL ?>user/submissions.php" class="btn btn-sm btn-primary">View All</a>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -140,22 +140,22 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <a href="/report.php" class="btn btn-primary btn-block">
+                            <a href="<?= BASE_URL ?>report.php" class="btn btn-primary btn-block">
                                 <i class="fas fa-plus-circle mr-2"></i> Report Threat
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <a href="/search.php" class="btn btn-secondary btn-block">
+                            <a href="<?= BASE_URL ?>search.php" class="btn btn-secondary btn-block">
                                 <i class="fas fa-search mr-2"></i> Search Database
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <a href="/appeals/submit.php" class="btn btn-warning btn-block">
+                            <a href="<?= BASE_URL ?>appeals/submit.php" class="btn btn-warning btn-block">
                                 <i class="fas fa-gavel mr-2"></i> Submit Appeal
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <a href="/user/settings.php" class="btn btn-info btn-block">
+                            <a href="<?= BASE_URL ?>user/settings.php" class="btn btn-info btn-block">
                                 <i class="fas fa-cog mr-2"></i> Account Settings
                             </a>
                         </div>
