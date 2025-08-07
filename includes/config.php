@@ -20,7 +20,26 @@ session_start();
 // Application constants
 define('APP_NAME', 'DTIS');
 define('APP_VERSION', '1.0.0');
-define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/DTIS/');
+
+// Dynamic BASE_URL calculation
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'];
+// Get the physical path of the project root directory
+$project_root_fs = dirname(__DIR__);
+// Get the physical path of the web server's document root
+$document_root_fs = $_SERVER['DOCUMENT_ROOT'];
+
+// Replace backslashes with forward slashes for Windows compatibility
+$project_root_fs = str_replace('\\', '/', $project_root_fs);
+$document_root_fs = str_replace('\\', '/', $document_root_fs);
+
+// Calculate the URI path by removing the document root from the project root path
+$uri_path = str_replace($document_root_fs, '', $project_root_fs);
+// Ensure there is a single trailing slash
+$uri_path = rtrim($uri_path, '/') . '/';
+
+define('BASE_URL', $protocol . $host . $uri_path);
+
 
 // Security constants
 define('REQUIRED_VERIFICATIONS', 50); // Minimum verifications for auto-approval

@@ -3,12 +3,12 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/auth.php';
 
 if (Auth::isLoggedIn()) {
-    header("Location: /dashboard.php");
+    header("Location: " . BASE_URL . "dashboard.php");
     exit;
 }
 
 $errors = [];
-$redirect = $_GET['redirect'] ?? '/dashboard.php';
+$redirect = $_GET['redirect'] ?? BASE_URL . 'dashboard.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -75,7 +75,7 @@ require_once __DIR__ . '/includes/header.php';
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                     <small class="form-text text-right">
-                        <a href="/password-reset.php">Forgot password?</a>
+                        <a href="<?= BASE_URL ?>password-reset.php">Forgot password?</a>
                     </small>
                 </div>
                 
@@ -88,10 +88,10 @@ require_once __DIR__ . '/includes/header.php';
                 
                 <div class="social-login mt-4">
                     <p class="text-center text-muted">Or sign in with</p>
-                    <a href="/auth/google" class="social-btn google">
+                    <a href="<?= BASE_URL ?>auth/google" class="social-btn google">
                         <i class="fab fa-google"></i> Google
                     </a>
-                    <a href="/auth/facebook" class="social-btn facebook">
+                    <a href="<?= BASE_URL ?>auth/facebook" class="social-btn facebook">
                         <i class="fab fa-facebook-f"></i> Facebook
                     </a>
                 </div>
@@ -99,7 +99,7 @@ require_once __DIR__ . '/includes/header.php';
         </div>
         
         <div class="auth-footer">
-            Don't have an account? <a href="/register.php">Sign up</a>
+            Don't have an account? <a href="<?= BASE_URL ?>register.php">Sign up</a>
         </div>
     </div>
 </div>
