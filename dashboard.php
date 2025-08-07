@@ -53,7 +53,7 @@ require_once __DIR__ . '/includes/header.php';
                     <p class="text-muted">Member since <?= date('M Y', strtotime($user['created_at'] ?? 'now')) ?></p>
                     
                     <div class="list-group">
-                        <a href="<?= BASE_URL ?>report.php" class="list-group-item list-group-item-action">
+                        <a href="<?= BASE_URL ?>modules/threats/report.php" class="list-group-item list-group-item-action">
                             <i class="fas fa-plus-circle mr-2"></i> Report New Threat
                         </a>
                         <a href="<?= BASE_URL ?>search.php" class="list-group-item list-group-item-action">
@@ -91,7 +91,7 @@ require_once __DIR__ . '/includes/header.php';
                     <?php if (empty($recentSubmissions)): ?>
                         <div class="alert alert-info">
                             You haven't submitted any threats yet. 
-                            <a href="<?= BASE_URL ?>report.php" class="alert-link">Report your first threat</a> to help protect others.
+                            <a href="<?= BASE_URL ?>modules/threats/report.php" class="alert-link">Report your first threat</a> to help protect others.
                         </div>
                     <?php else: ?>
                         <div class="table-responsive">
@@ -140,18 +140,13 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <a href="<?= BASE_URL ?>report.php" class="btn btn-primary btn-block">
+                            <a href="<?= BASE_URL ?>modules/threats/report.php" class="btn btn-primary btn-block">
                                 <i class="fas fa-plus-circle mr-2"></i> Report Threat
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">
                             <a href="<?= BASE_URL ?>search.php" class="btn btn-secondary btn-block">
                                 <i class="fas fa-search mr-2"></i> Search Database
-                            </a>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <a href="<?= BASE_URL ?>appeals/submit.php" class="btn btn-warning btn-block">
-                                <i class="fas fa-gavel mr-2"></i> Submit Appeal
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">

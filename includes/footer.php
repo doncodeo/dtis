@@ -11,8 +11,7 @@
                         <h5>Quick Links</h5>
                         <ul class="list-unstyled">
                             <li><a href="<?= BASE_URL ?>search.php" class="text-white">Threat Database</a></li>
-                            <li><a href="<?= BASE_URL ?>report.php" class="text-white">Report a Threat</a></li>
-                            <li><a href="<?= BASE_URL ?>appeal.php" class="text-white">Submit an Appeal</a></li>
+                            <li><a href="<?= BASE_URL ?>modules/threats/report.php" class="text-white">Report a Threat</a></li>
                         </ul>
                     </div>
                     <div class="col-md-4">
