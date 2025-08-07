@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../includes/auth.php';
 
 if (!Auth::isLoggedIn() || !Auth::isVerified()) {
-    header("Location: /login.php?redirect=/report.php");
+    header("Location: " . BASE_URL . "login.php?redirect=" . urlencode(BASE_URL . "modules/threats/report.php"));
     exit;
 }
 
@@ -50,8 +50,8 @@ require_once __DIR__ . '/../../includes/header.php';
                         <div class="alert alert-success">
                             Your threat report has been submitted successfully. Thank you for contributing to our community.
                         </div>
-                        <a href="/report.php" class="btn btn-primary">Report Another</a>
-                        <a href="/dashboard.php" class="btn btn-secondary">Go to Dashboard</a>
+                        <a href="<?= BASE_URL ?>modules/threats/report.php" class="btn btn-primary">Report Another</a>
+                        <a href="<?= BASE_URL ?>dashboard.php" class="btn btn-secondary">Go to Dashboard</a>
                     <?php else: ?>
                         <?php if (!empty($errors)): ?>
                             <div class="alert alert-danger">
@@ -100,27 +100,29 @@ require_once __DIR__ . '/../../includes/header.php';
 </div>
 
 <script>
-setupFormValidation('threatReportForm', {
-    category_id: {
-        required: true,
-        requiredMessage: 'Please select a threat type'
-    },
-    entity: {
-        required: true,
-        requiredMessage: 'Please enter the threat entity',
-        validate: function(value) {
-            const category = document.getElementById('category_id').value;
-            if (category === '1') { // Phishing Website
-                return validateURL(value);
-            } else if (category === '2') { // Scam Email
-                return validateEmail(value);
-            } else if (category === '3') { // Fraudulent Phone Number
-                return validatePhone(value);
-            }
-            return true;
+document.addEventListener('DOMContentLoaded', function () {
+    setupFormValidation('threatReportForm', {
+        category_id: {
+            required: true,
+            requiredMessage: 'Please select a threat type'
         },
-        validateMessage: 'Invalid format for selected threat type'
-    }
+        entity: {
+            required: true,
+            requiredMessage: 'Please enter the threat entity',
+            validate: function(value) {
+                const category = document.getElementById('category_id').value;
+                if (category === '1') { // Phishing Website
+                    return validateURL(value);
+                } else if (category === '2') { // Scam Email
+                    return validateEmail(value);
+                } else if (category === '3') { // Fraudulent Phone Number
+                    return validatePhone(value);
+                }
+                return true;
+            },
+            validateMessage: 'Invalid format for selected threat type'
+        }
+    });
 });
 </script>
 
