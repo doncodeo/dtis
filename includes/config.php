@@ -21,24 +21,11 @@ session_start();
 define('APP_NAME', 'DTIS');
 define('APP_VERSION', '1.0.0');
 
-// Dynamic BASE_URL calculation
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-$host = $_SERVER['HTTP_HOST'];
-// Get the physical path of the project root directory
-$project_root_fs = dirname(__DIR__);
-// Get the physical path of the web server's document root
-$document_root_fs = $_SERVER['DOCUMENT_ROOT'];
-
-// Replace backslashes with forward slashes for Windows compatibility
-$project_root_fs = str_replace('\\', '/', $project_root_fs);
-$document_root_fs = str_replace('\\', '/', $document_root_fs);
-
-// Calculate the URI path by removing the document root from the project root path
-$uri_path = str_replace($document_root_fs, '', $project_root_fs);
-// Ensure there is a single trailing slash
-$uri_path = rtrim($uri_path, '/') . '/';
-
-define('BASE_URL', $protocol . $host . $uri_path);
+// Base URL of the application.
+// IMPORTANT: If your project is in a subfolder, update the path here.
+// For example, if your URL is http://localhost/my-project/, set this to '/my-project/'.
+// If your project is at the root, set this to '/'.
+define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/DTIS/');
 
 
 // Security constants

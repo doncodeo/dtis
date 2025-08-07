@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../includes/auth.php';
 
 if (!Auth::isLoggedIn() || !Auth::isAdmin()) {
-    header("Location: /login.php");
+    header("Location: " . BASE_URL . "login.php");
     exit;
 }
 
@@ -96,7 +96,7 @@ require_once __DIR__ . '/../../includes/header.php';
                     <?php else: ?>
                         <div class="list-group">
                             <?php foreach ($recentThreats as $threat): ?>
-                                <a href="/threats/details.php?id=<?= $threat['threat_id'] ?>" 
+                                <a href="<?= BASE_URL ?>threats/details.php?id=<?= $threat['threat_id'] ?>"
                                    class="list-group-item list-group-item-action">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h6 class="mb-1"><?= htmlspecialchars($threat['entity']) ?></h6>
@@ -109,7 +109,7 @@ require_once __DIR__ . '/../../includes/header.php';
                     <?php endif; ?>
                 </div>
                 <div class="card-footer text-right">
-                    <a href="/admin/threats.php" class="btn btn-sm btn-primary">View All</a>
+                    <a href="<?= BASE_URL ?>admin/threats.php" class="btn btn-sm btn-primary">View All</a>
                 </div>
             </div>
         </div>
@@ -122,22 +122,22 @@ require_once __DIR__ . '/../../includes/header.php';
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <a href="/admin/threats.php" class="btn btn-block btn-outline-primary">
+                            <a href="<?= BASE_URL ?>admin/threats.php" class="btn btn-block btn-outline-primary">
                                 <i class="fas fa-shield-alt"></i> Manage Threats
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <a href="/admin/users.php" class="btn btn-block btn-outline-secondary">
+                            <a href="<?= BASE_URL ?>admin/users.php" class="btn btn-block btn-outline-secondary">
                                 <i class="fas fa-users"></i> Manage Users
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <a href="/admin/appeals.php" class="btn btn-block btn-outline-warning">
+                            <a href="<?= BASE_URL ?>admin/appeals.php" class="btn btn-block btn-outline-warning">
                                 <i class="fas fa-gavel"></i> Review Appeals
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <a href="/report.php" class="btn btn-block btn-outline-success">
+                            <a href="<?= BASE_URL ?>modules/threats/report.php" class="btn btn-block btn-outline-success">
                                 <i class="fas fa-plus"></i> Add Threat
                             </a>
                         </div>

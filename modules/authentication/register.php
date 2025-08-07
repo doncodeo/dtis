@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../includes/auth.php';
 
 if (Auth::isLoggedIn()) {
-    header("Location: /dashboard.php");
+    header("Location: " . BASE_URL . "dashboard.php");
     exit;
 }
 
@@ -40,7 +40,7 @@ require_once __DIR__ . '/../../includes/header.php';
                 <div class="alert alert-success">
                     Registration successful! Please check your email for the verification code.
                 </div>
-                <a href="/login.php" class="btn btn-primary">Go to Login</a>
+                <a href="<?= BASE_URL ?>login.php" class="btn btn-primary">Go to Login</a>
             <?php else: ?>
                 <?php if (!empty($errors)): ?>
                     <div class="alert alert-danger">
@@ -88,8 +88,8 @@ require_once __DIR__ . '/../../includes/header.php';
                     <div class="form-group form-check">
                         <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
                         <label class="form-check-label" for="terms">
-                            I agree to the <a href="/terms.php">Terms of Service</a> and 
-                            <a href="/privacy.php">Privacy Policy</a>
+                            I agree to the <a href="<?= BASE_URL ?>terms.php">Terms of Service</a> and
+                            <a href="<?= BASE_URL ?>privacy.php">Privacy Policy</a>
                         </label>
                     </div>
                     
@@ -97,7 +97,7 @@ require_once __DIR__ . '/../../includes/header.php';
                 </form>
                 
                 <div class="auth-footer">
-                    Already have an account? <a href="/login.php">Log in</a>
+                    Already have an account? <a href="<?= BASE_URL ?>login.php">Log in</a>
                 </div>
             <?php endif; ?>
         </div>
@@ -105,25 +105,27 @@ require_once __DIR__ . '/../../includes/header.php';
 </div>
 
 <script>
-setupFormValidation('registerForm', {
-    email: {
-        required: true,
-        type: 'email',
-        requiredMessage: 'Email is required'
-    },
-    password: {
-        required: true,
-        type: 'password',
-        requiredMessage: 'Password is required'
-    },
-    confirmPassword: {
-        required: true,
-        requiredMessage: 'Please confirm your password'
-    },
-    terms: {
-        required: true,
-        requiredMessage: 'You must agree to the terms'
-    }
+document.addEventListener('DOMContentLoaded', function () {
+    setupFormValidation('registerForm', {
+        email: {
+            required: true,
+            type: 'email',
+            requiredMessage: 'Email is required'
+        },
+        password: {
+            required: true,
+            type: 'password',
+            requiredMessage: 'Password is required'
+        },
+        confirmPassword: {
+            required: true,
+            requiredMessage: 'Please confirm your password'
+        },
+        terms: {
+            required: true,
+            requiredMessage: 'You must agree to the terms'
+        }
+    });
 });
 </script>
 
