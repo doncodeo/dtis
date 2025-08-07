@@ -112,13 +112,15 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <script>
-setupFormValidation('verifyForm', {
-    code: {
-        required: true,
-        pattern: /^\d{6}$/,
-        requiredMessage: 'Verification code is required',
-        validateMessage: 'Code must be 6 digits'
-    }
+document.addEventListener('DOMContentLoaded', function () {
+    setupFormValidation('verifyForm', {
+        code: {
+            required: true,
+            pattern: /^\d{6}$/,
+            requiredMessage: 'Verification code is required',
+            validateMessage: 'Code must be 6 digits'
+        }
+    });
 });
 </script>
 

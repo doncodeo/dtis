@@ -105,16 +105,18 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <script>
-setupFormValidation('loginForm', {
-    email: {
-        required: true,
-        type: 'email',
-        requiredMessage: 'Email is required'
-    },
-    password: {
-        required: true,
-        requiredMessage: 'Password is required'
-    }
+document.addEventListener('DOMContentLoaded', function () {
+    setupFormValidation('loginForm', {
+        email: {
+            required: true,
+            type: 'email',
+            requiredMessage: 'Email is required'
+        },
+        password: {
+            required: true,
+            requiredMessage: 'Password is required'
+        }
+    });
 });
 </script>
 
