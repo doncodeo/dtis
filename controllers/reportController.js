@@ -1,15 +1,19 @@
 const Report = require('../models/report');
 const User = require('../models/user');
+const Watchlist = require('../models/watchlist');
 const validator = require('validator');
 
 const { 
-    reportMail
+    reportMail,
+    sendRealTimeAlert
 } = require('../utils/emailServices');
 
-// Report an instrument
-
-
-
+/**
+ * @desc    Validate an instrument based on its type
+ * @param   {string} instrument - The instrument to validate
+ * @param   {string} type - The type of the instrument
+ * @returns {boolean} - True if the instrument is valid, false otherwise
+ */
 const validateInstrument = (instrument, type) => {
     if (type === 'email') {
         return validator.isEmail(instrument);
@@ -21,6 +25,13 @@ const validateInstrument = (instrument, type) => {
     return false;
 };
 
+/**
+ * @desc    Report a new instrument or add a review to an existing one
+ * @route   POST /api/reports
+ * @access  Private
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ */
 const reportInstrument = async (req, res) => {
     const { instrument, type, description, aliases } = req.body;
     const userId = req.user._id;
@@ -34,7 +45,7 @@ const reportInstrument = async (req, res) => {
         let report = await Report.findOne({ instrument, type });
 
         if (!report) {
-            report = new Report({ instrument, type, reviews: [], reviewCount: 0 });
+            report = new Report({ instrument, type, reviews: [] });
         }
 
         // Check if the user has already reported this instrument
@@ -46,7 +57,8 @@ const reportInstrument = async (req, res) => {
 
         // Add the new review
         report.reviews.push({ user: userId, description, aliases });
-        report.reviewCount += 1;
+
+        const wasPublic = report.isPublic;
 
         // Save the report (riskLevel and isPublic will be updated automatically by the pre-save middleware)
         await report.save();
@@ -54,47 +66,27 @@ const reportInstrument = async (req, res) => {
         // Notify user
         await reportMail(req.user, instrument);
 
+        // If the report just became public, send real-time alerts
+        if (report.isPublic && !wasPublic) {
+            const subscribers = await Watchlist.find({ category: report.type }).populate('user');
+            for (const subscriber of subscribers) {
+                await sendRealTimeAlert(subscriber.user, report);
+            }
+        }
+
         res.status(201).json({ message: 'Report submitted successfully', report });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// const reportInstrument = async (req, res) => {
-//     const { instrument, type, description, aliases } = req.body;
-//     const userId = req.user._id;
-
-//     try {
-//         let report = await Report.findOne({ instrument, type });
-
-//         if (!report) {
-//             report = new Report({ instrument, type, reviews: [], reviewCount: 0 });
-//         }
-
-//         // Check if the user has already reported this instrument
-//         const hasUserReported = report.reviews.some(review => review.user.toString() === userId.toString());
-
-//         if (hasUserReported) {
-//             return res.status(400).json({ message: 'You have already reported this instrument.' });
-//         }
-
-//         // Add the new review
-//         report.reviews.push({ user: userId, description, aliases });
-//         report.reviewCount += 1;
-
-//         // Save the report (riskLevel and isPublic will be updated automatically by the pre-save middleware)
-//         await report.save();
-
-//         // Notify user
-//         await reportMail(req.user, instrument);
-
-//         res.status(201).json({ message: 'Report submitted successfully', report });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Server error', error });
-//     }
-// };
-
-// Fetch all reported instruments (only public ones)
+/**
+ * @desc    Fetch all public reports
+ * @route   GET /api/reports
+ * @access  Public
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ */
 const fetchAllReports = async (req, res) => {
     const { page = 1, limit = 10, type } = req.query;
 
@@ -123,7 +115,13 @@ const fetchAllReports = async (req, res) => {
     }
 };
 
-// Fetch all reports (admin-only) without pagination
+/**
+ * @desc    Fetch all reports (for admins)
+ * @route   GET /api/reports/admin
+ * @access  Private/Admin
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ */
 const fetchAllReportsAdmin = async (req, res) => {
     const { type, instrument } = req.query;
 
@@ -151,4 +149,3 @@ module.exports = {
     fetchAllReports,
     fetchAllReportsAdmin
 };
-

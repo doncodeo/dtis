@@ -3,12 +3,16 @@ const {
     registerUser,
     verifyUser,
     verificationCode,
-    login
+    login,
+    forgotPassword,
+    resetPassword,
+    getUserStats
 } = require('../controllers/userController');
 const { 
     protect, 
     adminOnly 
 } = require('../middleware/authMiddleware');
+const { authLimiter } = require('../middleware/rateLimiter');
 
 const router = express.Router();
 
@@ -16,13 +20,22 @@ router.route('/')
     .post(registerUser)
 
 router.route('/login')
-    .post(login)
+    .post(authLimiter, login)
 
 router.route('/verify')
-    .post(verifyUser)
+    .post(authLimiter, verifyUser)
 
 router.route('/resendcode')
-    .post(verificationCode)
+    .post(authLimiter, verificationCode)
+
+router.route('/forgot-password')
+    .post(forgotPassword)
+
+router.route('/reset-password/:token')
+    .post(resetPassword)
+
+router.route('/stats')
+    .get(protect, getUserStats);
 
 
 module.exports = router;

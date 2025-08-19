@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema({
     lastLogin: { type: Date },
     subscriptionStatus: { type: String, enum: ['active', 'inactive'], default: 'inactive' }, // Track subscription status
     subscriptionExpiry: { type: Date }, // Track subscription expiry date
+    passwordResetToken: { type: String },
+    passwordResetExpires: { type: Date },
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

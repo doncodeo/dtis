@@ -219,6 +219,53 @@ const appealResolutionMail = async (user, instrument, status) => {
     await sendEmail(user.email, subject, html);
 };
 
+// Send password reset email
+const forgotPasswordMail = async (user, resetToken) => {
+    const subject = 'Password Reset Request';
+    const resetUrl = `${process.env.APP_URL}/reset-password/${resetToken}`;
+    const content = `
+        <p>Dear ${user.name},</p>
+        <p>You have requested to reset your password. Please click the link below to reset it:</p>
+        <a href="${resetUrl}" style="
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #FFD700;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+        ">Reset Password</a>
+        <p>If you did not request a password reset, please ignore this email.</p>
+    `;
+    const html = baseEmailTemplate('Password Reset Request', content);
+    await sendEmail(user.email, subject, html);
+};
+
+// Notify user when their password has been reset
+const resetPasswordMail = async (user) => {
+    const subject = 'Your Password Has Been Reset';
+    const content = `
+        <p>Dear ${user.name},</p>
+        <p>Your password has been successfully reset. If you did not make this change, please contact our support team immediately.</p>
+    `;
+    const html = baseEmailTemplate('Password Reset Successful', content);
+    await sendEmail(user.email, subject, html);
+};
+
+const sendRealTimeAlert = async (user, report) => {
+    const subject = `New Threat Alert: ${report.type}`;
+    const content = `
+        <p>Dear ${user.name},</p>
+        <p>A new threat has been reported in a category you are watching: <strong>${report.type}</strong>.</p>
+        <p>Instrument: <strong>${report.instrument}</strong></p>
+        <p>Risk Level: <strong>${report.riskLevel}</strong></p>
+        <p>You can view the report here: <a href="${process.env.APP_URL}/report/${report._id}">View Report</a></p>
+    `;
+    const html = baseEmailTemplate(subject, content);
+    await sendEmail(user.email, subject, html);
+};
+
 module.exports = {
     verificationMail,
     reVerificationMail,
@@ -227,4 +274,7 @@ module.exports = {
     appealMail,
     adminAppeal,
     appealResolutionMail,
+    forgotPasswordMail,
+    resetPasswordMail,
+    sendRealTimeAlert,
 };
