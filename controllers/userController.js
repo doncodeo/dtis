@@ -1,12 +1,17 @@
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const User = require('../models/user');
+const Report = require('../models/report');
+const Appeal = require('../models/appeal');
 const asyncHandler = require('express-async-handler');
 const jwt = require('jsonwebtoken');
 
 const { 
     verificationMail, 
     reVerificationMail, 
-    emailVerified
+    emailVerified,
+    forgotPasswordMail,
+    resetPasswordMail
 } = require('../utils/emailServices');
 
 const registerUser = async (req, res) => {
@@ -175,10 +180,85 @@ const login = asyncHandler(async (req, res) => {
     }
   });
 
+const forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Generate a reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    user.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    user.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    await user.save();
+
+    // Send the email
+    try {
+        await forgotPasswordMail(user, resetToken);
+        res.json({ message: 'Password reset email sent' });
+    } catch (error) {
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+        await user.save();
+        res.status(500).json({ message: 'Error sending email' });
+    }
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await User.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+        return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+
+    // Set the new password
+    user.password = await bcrypt.hash(password, 10);
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+
+    await user.save();
+
+    // Send confirmation email
+    await resetPasswordMail(user);
+
+    res.json({ message: 'Password has been reset' });
+});
+
+const getUserStats = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+
+    const totalReports = await Report.countDocuments({ 'reviews.user': userId });
+    const totalAppeals = await Appeal.countDocuments({ user: userId });
+
+    const recentReports = await Report.find({ 'reviews.user': userId })
+        .sort({ createdAt: -1 })
+        .limit(5);
+
+    res.json({
+        totalReports,
+        totalAppeals,
+        recentReports
+    });
+});
+
 module.exports = {
     registerUser,
     verifyUser,
     verificationCode,
-    login
+    login,
+    forgotPassword,
+    resetPassword,
+    getUserStats
 };
   

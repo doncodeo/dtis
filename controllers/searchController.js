@@ -1,18 +1,19 @@
 const Report = require('../models/report');
 
-// Search for an instrument
-
-// controllers/searchController.js
-// controllers/searchController.js
+/**
+ * @desc    Search for an instrument in the database
+ * @route   POST /api/search
+ * @access  Public
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ */
 const searchInstrument = async (req, res) => {
     const { instrument, type } = req.body; // Extract from request body
     const user = req.user; // `req.user` will be available if the user is authenticated
 
-    console.log(instrument, type);
-
     try {
         // Validate the type
-        const validTypes = ['phone', 'email', 'business', 'website'];
+        const validTypes = ['phone', 'email', 'business', 'website', 'Fake Tech Support', 'Fraudulent Phone Number', 'Malware Distribution', 'Phishing Website', 'Scam Email'];
         if (!validTypes.includes(type)) {
             return res.status(400).json({ message: 'Invalid instrument type.' });
         }
@@ -61,7 +62,4 @@ const searchInstrument = async (req, res) => {
     }
 };
 
-
 module.exports = { searchInstrument };
-
-// module.exports = { searchInstrument };
