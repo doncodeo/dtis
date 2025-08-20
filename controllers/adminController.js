@@ -38,6 +38,33 @@ const getAdminStats = asyncHandler(async (req, res) => {
     });
 });
 
+const verifyThreat = asyncHandler(async (req, res) => {
+    const report = await Report.findById(req.params.id);
+
+    if (report) {
+        report.verificationStatus = 'verified';
+        const updatedReport = await report.save();
+        res.json(updatedReport);
+    } else {
+        res.status(404).json({ message: 'Report not found' });
+    }
+});
+
+const setThreatVisibility = asyncHandler(async (req, res) => {
+    const { isPublic } = req.body;
+    const report = await Report.findById(req.params.id);
+
+    if (report) {
+        report.isPublic = isPublic;
+        const updatedReport = await report.save();
+        res.json(updatedReport);
+    } else {
+        res.status(404).json({ message: 'Report not found' });
+    }
+});
+
 module.exports = {
-    getAdminStats
+    getAdminStats,
+    verifyThreat,
+    setThreatVisibility
 };

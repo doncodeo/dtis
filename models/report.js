@@ -23,7 +23,8 @@ const reportSchema = new mongoose.Schema({
         aliases: [{ type: String }]
     }],
     riskLevel: { type: String, enum: ['low', 'medium', 'high'], default: 'low' }, // Risk classification
-    isPublic: { type: Boolean, default: false } // Public visibility
+    isPublic: { type: Boolean, default: false }, // Public visibility
+    verificationStatus: { type: String, enum: ['unverified', 'verified'], default: 'unverified' }
 }, {
     timestamps: true,
     toJSON: { virtuals: true },
@@ -35,7 +36,7 @@ reportSchema.virtual('reviewCount').get(function() {
     return this.reviews.length;
 });
 
-// Middleware to update riskLevel and isPublic before saving
+// Middleware to update riskLevel, isPublic and verificationStatus before saving
 reportSchema.pre('save', function (next) {
     const reviewCount = this.reviews.length;
     if (reviewCount >= 100) {
@@ -48,6 +49,12 @@ reportSchema.pre('save', function (next) {
 
     // Make the instrument public if it has 50 or more reports
     this.isPublic = reviewCount >= 50;
+
+    // Automatically verify the instrument if it has 200 or more reports
+    if (reviewCount >= 200) {
+        this.verificationStatus = 'verified';
+    }
+
     next();
 });
 
