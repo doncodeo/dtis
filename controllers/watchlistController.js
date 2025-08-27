@@ -36,13 +36,18 @@ const deleteWatchlistItem = asyncHandler(async (req, res) => {
     const watchlistItem = await Watchlist.findById(req.params.id);
 
     if (watchlistItem) {
+        // Ensure the user owns the watchlist item
         if (watchlistItem.user.toString() !== req.user._id.toString()) {
-            return res.status(401).json({ message: 'Not authorized' });
+            res.status(401);
+            throw new Error('Not authorized');
         }
-        await watchlistItem.remove();
+
+        await Watchlist.deleteOne({ _id: watchlistItem._id });
+
         res.json({ message: 'Watchlist item removed' });
     } else {
-        res.status(404).json({ message: 'Watchlist item not found' });
+        res.status(404);
+        throw new Error('Watchlist item not found');
     }
 });
 
