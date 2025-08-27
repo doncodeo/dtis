@@ -166,12 +166,21 @@ const emailVerified = async (user) => {
 };
 
 // Notify user when they successfully report an instrument
-const reportMail = async (user, instrument) => {
+const reportMail = async (user, instrument, isNewThreat) => {
     const subject = 'Your Report Has Been Successfully Submitted';
+
+    let message;
+    if (isNewThreat) {
+        message = `<p>This appears to be a new threat. We encourage you to have other victims report it to increase its visibility.</p>`;
+    } else {
+        message = `<p>Thank you for being part of the people keeping the community safe. This threat has been reported by other members and is already in our database.</p>`;
+    }
+
     const content = `
         <p>Dear ${user.name},</p>
         <p>Your report for the Threat <strong>${instrument}</strong> has been successfully submitted.</p>
-        <p>Thank you for helping to keep the community safe!</p>
+        ${message}
+        <p>Please be aware that making a false report out of malicious intent is illegal and may be a litigable offense.</p>
     `;
     const html = baseEmailTemplate('Report Submitted Successfully', content);
     await sendEmail(user.email, subject, html);
