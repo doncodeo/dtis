@@ -42,7 +42,7 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-const routes = [
+const routes = [    
   { path: '/api/users', router: require('./routes/userRoutes') },
   { path: '/api/reports', router: require('./routes/reportRoutes') },
   { path: '/api/search', router: require('./routes/searchRoutes') },
