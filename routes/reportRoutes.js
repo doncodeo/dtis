@@ -16,18 +16,10 @@ const router = express.Router();
  *     InstrumentType:
  *       type: string
  *       enum:
- *         - phone
- *         - email
- *         - business
- *         - website
- *         - Fake Tech Support
  *         - Fraudulent Phone Number
- *         - Malware Distribution
- *         - Phishing Website
- *         - Scam Email
- *         - Fraudulent Business
  *         - Fraudulent Website
  *         - Scam/Fraudulent Email
+ *         - Fraudulent Business
  */
 
 /**

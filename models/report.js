@@ -5,18 +5,10 @@ const reportSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: [
-            'phone',
-            'email',
-            'business',
-            'website',
-            'Fake Tech Support',
             'Fraudulent Phone Number',
-            'Malware Distribution',
-            'Phishing Website',
-            'Scam Email',
-            'Fraudulent Business',
             'Fraudulent Website',
-            'Scam/Fraudulent Email'
+            'Scam/Fraudulent Email',
+            'Fraudulent Business'
         ],
         required: true
     },
