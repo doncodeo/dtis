@@ -13,7 +13,7 @@ const searchInstrument = async (req, res) => {
 
     try {
         // Validate the type
-        const validTypes = ['phone', 'email', 'business', 'website', 'Fake Tech Support', 'Fraudulent Phone Number', 'Malware Distribution', 'Phishing Website', 'Scam Email'];
+        const validTypes = Report.schema.path('type').enumValues;
         if (!validTypes.includes(type)) {
             return res.status(400).json({ message: 'Invalid instrument type.' });
         }
@@ -62,4 +62,27 @@ const searchInstrument = async (req, res) => {
     }
 };
 
-module.exports = { searchInstrument };
+/**
+ * @desc    Autocomplete search for instruments
+ * @route   GET /api/search/autocomplete
+ * @access  Public
+ */
+const autocompleteSearch = async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q) {
+            return res.status(400).json({ message: 'Query parameter "q" is required.' });
+        }
+
+        const reports = await Report.find({
+            instrument: { $regex: `^${q}`, $options: 'i' },
+            isPublic: true
+        }).limit(10);
+
+        res.status(200).json(reports);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+module.exports = { searchInstrument, autocompleteSearch };

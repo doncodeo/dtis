@@ -15,14 +15,26 @@ const {
  * @returns {boolean} - True if the instrument is valid, false otherwise
  */
 const validateInstrument = (instrument, type) => {
-    if (type === 'email') {
-        return validator.isEmail(instrument);
-    } else if (type === 'phone') {
-        return validator.isMobilePhone(instrument, 'any', { strictMode: false });
-    } else if (type === 'website') {
-        return validator.isURL(instrument, { protocols: ['http', 'https'], require_protocol: true });
+    switch (type) {
+        case 'email':
+        case 'Scam Email':
+        case 'Scam/Fraudulent Email':
+            return validator.isEmail(instrument);
+        case 'phone':
+        case 'Fraudulent Phone Number':
+            return validator.isMobilePhone(instrument, 'any', { strictMode: false });
+        case 'website':
+        case 'Fraudulent Website':
+        case 'Phishing Website':
+            return validator.isURL(instrument, { protocols: ['http', 'https'], require_protocol: true });
+        case 'business':
+        case 'Fraudulent Business':
+        case 'Fake Tech Support':
+        case 'Malware Distribution':
+            return typeof instrument === 'string' && instrument.length > 0;
+        default:
+            return false; // Disallow unknown types
     }
-    return false;
 };
 
 /**
@@ -145,8 +157,26 @@ const fetchAllReportsAdmin = async (req, res) => {
     }
 };
 
+/**
+ * @desc    Get all instrument types
+ * @route   GET /api/reports/types
+ * @access  Public
+ */
+const getInstrumentTypes = (req, res) => {
+    try {
+        const instrumentTypes = Report.schema.path('type').enumValues;
+        res.status(200).json({
+            success: true,
+            data: instrumentTypes,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error });
+    }
+};
+
 module.exports = { 
     reportInstrument,
     fetchAllReports,
-    fetchAllReportsAdmin
+    fetchAllReportsAdmin,
+    getInstrumentTypes
 };

@@ -13,7 +13,10 @@ const reportSchema = new mongoose.Schema({
             'Fraudulent Phone Number',
             'Malware Distribution',
             'Phishing Website',
-            'Scam Email'
+            'Scam Email',
+            'Fraudulent Business',
+            'Fraudulent Website',
+            'Scam/Fraudulent Email'
         ],
         required: true
     },
