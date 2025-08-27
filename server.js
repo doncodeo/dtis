@@ -6,6 +6,8 @@ const path = require('path');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const { errorHandler } = require('./middleware/errorHandler');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 
 const app = express();
 const port = process.env.PORT || 5400; // Fallback to 5400 if PORT is not set
@@ -40,6 +42,9 @@ app.use(morgan('dev'));
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 const routes = [    
