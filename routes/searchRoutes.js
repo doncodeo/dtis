@@ -1,10 +1,32 @@
 
 // routes/searchRoutes.js
 const express = require('express');
-const { searchInstrument } = require('../controllers/searchController');
+const { searchInstrument, autocompleteSearch } = require('../controllers/searchController');
 const { optionalAuth } = require('../middleware/authMiddleware'); // Optional authentication middleware
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * /api/search/autocomplete:
+ *   get:
+ *     summary: Autocomplete search for an instrument
+ *     description: Searches for instruments matching a partial query string.
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The partial instrument string to search for.
+ *     responses:
+ *       200:
+ *         description: A list of matching instruments.
+ *       400:
+ *         description: Missing query parameter.
+ */
+router.route('/autocomplete')
+    .get(autocompleteSearch);
 
 /**
  * @swagger
@@ -25,8 +47,7 @@ const router = express.Router();
  *               instrument:
  *                 type: string
  *               type:
- *                 type: string
- *                 enum: [phone, email, business, website, 'Fake Tech Support', 'Fraudulent Phone Number', 'Malware Distribution', 'Phishing Website', 'Scam Email']
+ *                 $ref: '#/components/schemas/InstrumentType'
  *     responses:
  *       200:
  *         description: The search results.

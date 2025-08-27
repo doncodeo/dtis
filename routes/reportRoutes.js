@@ -1,12 +1,53 @@
 const express = require('express');
-const { 
+const {
     reportInstrument,
     fetchAllReports,
-    fetchAllReportsAdmin
+    fetchAllReportsAdmin,
+    getInstrumentTypes
 } = require('../controllers/reportController');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     InstrumentType:
+ *       type: string
+ *       enum:
+ *         - phone
+ *         - email
+ *         - business
+ *         - website
+ *         - Fake Tech Support
+ *         - Fraudulent Phone Number
+ *         - Malware Distribution
+ *         - Phishing Website
+ *         - Scam Email
+ *         - Fraudulent Business
+ *         - Fraudulent Website
+ *         - Scam/Fraudulent Email
+ */
+
+/**
+ * @swagger
+ * /api/reports/types:
+ *   get:
+ *     summary: Get all instrument types
+ *     description: Retrieves a list of all possible instrument types.
+ *     responses:
+ *       200:
+ *         description: A list of instrument types.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/InstrumentType'
+ */
+router.route('/types')
+    .get(getInstrumentTypes);
 
 /**
  * @swagger
@@ -30,8 +71,7 @@ const router = express.Router();
  *               instrument:
  *                 type: string
  *               type:
- *                 type: string
- *                 enum: [email, phone, website]
+ *                 $ref: '#/components/schemas/InstrumentType'
  *               description:
  *                 type: string
  *               aliases:
@@ -62,8 +102,7 @@ const router = express.Router();
  *       - in: query
  *         name: type
  *         schema:
- *           type: string
- *           enum: [email, phone, website]
+ *           $ref: '#/components/schemas/InstrumentType'
  *         description: The type of reports to retrieve.
  *     responses:
  *       200:
@@ -71,7 +110,7 @@ const router = express.Router();
  */
 router.route('/')
     .post(protect, reportInstrument) // For reporting an instrument
-    .get(fetchAllReports)// For fetching all reports
+    .get(fetchAllReports); // For fetching all reports
 
 /**
  * @swagger
@@ -85,8 +124,7 @@ router.route('/')
  *       - in: query
  *         name: type
  *         schema:
- *           type: string
- *           enum: [email, phone, website]
+ *           $ref: '#/components/schemas/InstrumentType'
  *         description: The type of reports to retrieve.
  *       - in: query
  *         name: instrument
