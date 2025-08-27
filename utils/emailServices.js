@@ -171,20 +171,23 @@ const reportMail = async (user, instrument, isNewThreat) => {
 
     let message;
     if (isNewThreat) {
-        message = `<p>This appears to be a new threat. We encourage you to have other victims report it to increase its visibility.</p>`;
+        message = `<p>This appears to be a newly identified threat. We encourage you to share this with others who may have been affected so they can also submit a report. This will help increase its visibility and strengthen our community database.</p>`;
     } else {
-        message = `<p>Thank you for being part of the people keeping the community safe. This threat has been reported by other members and is already in our database.</p>`;
+        message = `<p>Thank you for contributing to the safety of our community. This threat has already been reported by other members and is part of our database. Your report adds valuable confirmation and helps us maintain accurate records.</p>`;
     }
 
     const content = `
         <p>Dear ${user.name},</p>
-        <p>Your report for the Threat <strong>${instrument}</strong> has been successfully submitted.</p>
+        <p>Your report regarding the threat <strong>${instrument}</strong> has been successfully submitted.</p>
         ${message}
-        <p>Please be aware that making a false report out of malicious intent is illegal and may be a litigable offense.</p>
+        <p>Please note that submitting false reports intentionally is against the law and may result in legal action.</p>
+        <p>We appreciate your effort in keeping our community safe and informed.</p>
     `;
+
     const html = baseEmailTemplate('Report Submitted Successfully', content);
     await sendEmail(user.email, subject, html);
 };
+
 
 // Notify user when they submit an appeal
 const appealMail = async (user, instrument) => {
