@@ -11,11 +11,78 @@ const checkSubscription = require('../middleware/subscriptioin'); // Import the 
 
 const router = express.Router();
 
-// Only subscribed users can submit appeals
+/**
+ * @swagger
+ * /api/appeals:
+ *   post:
+ *     summary: Submit an appeal
+ *     description: Submits an appeal for a reported instrument.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - instrument
+ *               - reason
+ *             properties:
+ *               instrument:
+ *                 type: string
+ *               reason:
+ *                 type: string
+ *               evidence:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Appeal submitted successfully.
+ *       400:
+ *         description: Bad request.
+ *       401:
+ *         description: Unauthorized.
+ */
 router.route('/')
     .post(protect, checkSubscription, submitAppeal);
 
-// Only admins can resolve appeals
+/**
+ * @swagger
+ * /api/appeals/{appealId}:
+ *   post:
+ *     summary: Resolve an appeal
+ *     description: Resolves an appeal by approving or rejecting it.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: appealId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the appeal to resolve.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - action
+ *             properties:
+ *               action:
+ *                 type: string
+ *                 enum: [approve, reject]
+ *     responses:
+ *       200:
+ *         description: Appeal resolved successfully.
+ *       400:
+ *         description: Invalid action.
+ *       401:
+ *         description: Unauthorized.
+ *       404:
+ *         description: Appeal not found.
+ */
 router.route('/:appealId')
     .post(protect, adminOnly, resolveAppeal);
 
