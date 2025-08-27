@@ -167,26 +167,27 @@ const emailVerified = async (user) => {
 
 // Notify user when they successfully report an instrument
 const reportMail = async (user, instrument, isNewThreat) => {
-    const subject = 'Your Report Has Been Successfully Submitted';
+    const subject = 'Thanks for Submitting Your Report!';
 
     let message;
     if (isNewThreat) {
-        message = `<p>This appears to be a newly identified threat. We encourage you to share this with others who may have been affected so they can also submit a report. This will help increase its visibility and strengthen our community database.</p>`;
+        message = `<p>This looks like a new threat. If you know others who’ve been affected, please encourage them to report it too—this helps us raise awareness and protect more people.</p>`;
     } else {
-        message = `<p>Thank you for contributing to the safety of our community. This threat has already been reported by other members and is part of our database. Your report adds valuable confirmation and helps us maintain accurate records.</p>`;
+        message = `<p>Thanks for helping keep the community safe! This threat has already been reported by others, and your submission helps confirm and strengthen our records.</p>`;
     }
 
     const content = `
-        <p>Dear ${user.name},</p>
-        <p>Your report regarding the threat <strong>${instrument}</strong> has been successfully submitted.</p>
+        <p>Hi ${user.name},</p>
+        <p>We’ve received your report for <strong>${instrument}</strong>, and it’s now logged in our system.</p>
         ${message}
-        <p>Please note that submitting false reports intentionally is against the law and may result in legal action.</p>
-        <p>We appreciate your effort in keeping our community safe and informed.</p>
+        <p>Just a quick reminder: false reports made on purpose can cause harm and may lead to legal consequences.</p>
+        <p>We truly appreciate your effort in looking out for others. Together, we can make the community safer for everyone.</p>
     `;
 
-    const html = baseEmailTemplate('Report Submitted Successfully', content);
+    const html = baseEmailTemplate('Report Received', content);
     await sendEmail(user.email, subject, html);
 };
+
 
 
 // Notify user when they submit an appeal
