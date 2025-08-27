@@ -43,8 +43,9 @@ const reportInstrument = async (req, res) => {
         }
 
         let report = await Report.findOne({ instrument, type });
+        const isNewThreat = !report;
 
-        if (!report) {
+        if (isNewThreat) {
             report = new Report({ instrument, type, reviews: [] });
         }
 
@@ -64,7 +65,7 @@ const reportInstrument = async (req, res) => {
         await report.save();
 
         // Notify user
-        await reportMail(req.user, instrument);
+        await reportMail(req.user, instrument, isNewThreat);
 
         // If the report just became public, send real-time alerts
         if (report.isPublic && !wasPublic) {
