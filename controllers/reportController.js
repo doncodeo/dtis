@@ -16,21 +16,13 @@ const {
  */
 const validateInstrument = (instrument, type) => {
     switch (type) {
-        case 'email':
-        case 'Scam Email':
         case 'Scam/Fraudulent Email':
             return validator.isEmail(instrument);
-        case 'phone':
         case 'Fraudulent Phone Number':
             return validator.isMobilePhone(instrument, 'any', { strictMode: false });
-        case 'website':
         case 'Fraudulent Website':
-        case 'Phishing Website':
             return validator.isURL(instrument, { protocols: ['http', 'https'], require_protocol: true });
-        case 'business':
         case 'Fraudulent Business':
-        case 'Fake Tech Support':
-        case 'Malware Distribution':
             return typeof instrument === 'string' && instrument.length > 0;
         default:
             return false; // Disallow unknown types

@@ -49,7 +49,7 @@ describe('Admin Routes', () => {
             const admin = new User({ name: 'Admin', email: 'admin@test.com', password: 'password', role: 'admin' });
             await admin.save();
 
-            const report = new Report({ instrument: 'test.com', type: 'website', reviews: [{ user: admin._id, description: 'test' }] });
+            const report = new Report({ instrument: 'test.com', type: 'Fraudulent Website', reviews: [{ user: admin._id, description: 'test' }] });
             await report.save();
 
             authMiddleware.protect.mockImplementation((req, res, next) => {
@@ -70,7 +70,7 @@ describe('Admin Routes', () => {
             const admin = new User({ name: 'Admin', email: 'admin@test.com', password: 'password', role: 'admin' });
             await admin.save();
 
-            const report = new Report({ instrument: 'test.com', type: 'website', isPublic: true, reviews: [{ user: admin._id, description: 'test' }] });
+            const report = new Report({ instrument: 'test.com', type: 'Fraudulent Website', isPublic: true, reviews: [{ user: admin._id, description: 'test' }] });
             await report.save();
 
             authMiddleware.protect.mockImplementation((req, res, next) => {
