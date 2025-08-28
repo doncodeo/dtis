@@ -49,7 +49,7 @@ router.route('/reports/:id/verify')
 /**
  * @swagger
  * /api/admin/reports/{id}/visibility:
- *   put:
+ *   patch:
  *     summary: Set threat visibility (Admin)
  *     description: Sets the public visibility of a threat report, overriding the default logic.
  *     security:
