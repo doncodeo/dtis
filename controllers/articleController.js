@@ -66,7 +66,7 @@ const deleteArticle = asyncHandler(async (req, res) => {
     const article = await Article.findById(req.params.id);
 
     if (article) {
-        await article.remove();
+        await Article.deleteOne({ _id: article._id });
         res.json({ message: 'Article removed' });
     } else {
         res.status(404).json({ message: 'Article not found' });
