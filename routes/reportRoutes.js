@@ -4,7 +4,10 @@ const {
     fetchAllReports,
     fetchAllReportsAdmin,
     getInstrumentTypes,
-    getTotalThreats
+    getTotalThreats,
+    updateReport,
+    adminUpdateReport,
+    adminDeleteReport
 } = require('../controllers/reportController');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
 
@@ -159,5 +162,127 @@ router.route('/admin')
  */
 router.route('/stats/total')
     .get(getTotalThreats);
+
+/**
+ * @swagger
+ * /api/reports/{id}:
+ *   put:
+ *     summary: Update a report
+ *     description: Updates a report. The user can only update their own report within one hour of creation.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the report to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               description:
+ *                 type: string
+ *               aliases:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Report updated successfully.
+ *       400:
+ *         description: Bad request.
+ *       401:
+ *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden.
+ *       404:
+ *         description: Report not found.
+ */
+router.route('/:id')
+    .put(protect, updateReport);
+
+/**
+ * @swagger
+ * /api/reports/admin/{id}:
+ *   put:
+ *     summary: Admin update a report
+ *     description: Updates any report. This is an admin-only endpoint.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the report to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               instrument:
+ *                 type: string
+ *               type:
+ *                 $ref: '#/components/schemas/InstrumentType'
+ *               description:
+ *                 type: string
+ *               aliases:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               riskLevel:
+ *                 type: string
+ *                 enum: [low, medium, high]
+ *               isPublic:
+ *                 type: boolean
+ *               forcePublic:
+ *                 type: boolean
+ *               verificationStatus:
+ *                 type: string
+ *                 enum: [unverified, verified]
+ *     responses:
+ *       200:
+ *         description: Report updated successfully.
+ *       400:
+ *         description: Bad request.
+ *       401:
+ *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden.
+ *       404:
+ *         description: Report not found.
+ *   delete:
+ *     summary: Admin delete a report
+ *     description: Deletes any report. This is an admin-only endpoint.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the report to delete.
+ *     responses:
+ *       200:
+ *         description: Report deleted successfully.
+ *       401:
+ *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden.
+ *       404:
+ *         description: Report not found.
+ */
+router.route('/admin/:id')
+    .put(protect, adminOnly, adminUpdateReport)
+    .delete(protect, adminOnly, adminDeleteReport);
 
 module.exports = router;

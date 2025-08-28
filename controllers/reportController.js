@@ -50,7 +50,11 @@ const reportInstrument = async (req, res) => {
         const isNewThreat = !report;
 
         if (isNewThreat) {
-            report = new Report({ instrument, type, reviews: [] });
+            report = new Report({ instrument, type, reviews: [], createdBy: userId });
+        }
+
+        if (!report.createdBy) {
+            report.createdBy = userId;
         }
 
         // Check if the user has already reported this instrument
@@ -187,10 +191,100 @@ const getTotalThreats = async (req, res) => {
     }
 };
 
+/**
+ * @desc    Update a report
+ * @route   PUT /api/reports/:id
+ * @access  Private
+ */
+const updateReport = async (req, res) => {
+    const { id } = req.params;
+    const { description, aliases } = req.body;
+    const userId = req.user._id;
+
+    try {
+        const report = await Report.findById(id);
+
+        if (!report) {
+            return res.status(404).json({ message: 'Report not found.' });
+        }
+
+        if (report.createdBy.toString() !== userId.toString()) {
+            return res.status(403).json({ message: 'You are not authorized to edit this report.' });
+        }
+
+        const oneHour = 60 * 60 * 1000;
+        if (new Date() - report.createdAt > oneHour) {
+            return res.status(403).json({ message: 'You can only edit a report within one hour of creation.' });
+        }
+
+        const review = report.reviews.find(review => review.user.toString() === userId.toString());
+
+        if (review) {
+            review.description = description || review.description;
+            review.aliases = aliases || review.aliases;
+        }
+
+        await report.save();
+
+        res.status(200).json({ message: 'Report updated successfully.', report });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+
+/**
+ * @desc    Admin update a report
+ * @route   PUT /api/reports/admin/:id
+ * @access  Private/Admin
+ */
+const adminUpdateReport = async (req, res) => {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    try {
+        const report = await Report.findByIdAndUpdate(id, updateData, { new: true });
+
+        if (!report) {
+            return res.status(404).json({ message: 'Report not found.' });
+        }
+
+        res.status(200).json({ message: 'Report updated successfully.', report });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+/**
+ * @desc    Admin delete a report
+ * @route   DELETE /api/reports/admin/:id
+ * @access  Private/Admin
+ */
+const adminDeleteReport = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const report = await Report.findById(id);
+
+        if (!report) {
+            return res.status(404).json({ message: 'Report not found.' });
+        }
+
+        await Report.findByIdAndDelete(id);
+
+        res.status(200).json({ message: 'Report deleted successfully.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
 module.exports = { 
     reportInstrument,
     fetchAllReports,
     fetchAllReportsAdmin,
     getInstrumentTypes,
-    getTotalThreats
+    getTotalThreats,
+    updateReport,
+    adminUpdateReport,
+    adminDeleteReport
 };

@@ -19,6 +19,7 @@ const reportSchema = new mongoose.Schema({
     }],
     riskLevel: { type: String, enum: ['low', 'medium', 'high'], default: 'low' }, // Risk classification
     isPublic: { type: Boolean, default: false }, // Public visibility
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     forcePublic: { type: Boolean, default: false }, // Admin override for public visibility
     verificationStatus: { type: String, enum: ['unverified', 'verified'], default: 'unverified' }
 }, {
