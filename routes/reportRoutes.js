@@ -137,18 +137,25 @@ router.route('/admin')
  * @swagger
  * /api/reports/stats/total:
  *   get:
- *     summary: Get total number of public threats
- *     description: Retrieves the total number of reports that are marked as public.
+ *     summary: Get threat statistics
+ *     description: Retrieves the total number of all reported threats and the total number of verified threats.
  *     responses:
  *       200:
- *         description: Total number of public threats retrieved successfully.
+ *         description: Threat statistics retrieved successfully.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 total:
- *                   type: integer
+ *                 success:
+ *                   type: boolean
+ *                 stats:
+ *                   type: object
+ *                   properties:
+ *                     totalThreats:
+ *                       type: integer
+ *                     verifiedThreats:
+ *                       type: integer
  */
 router.route('/stats/total')
     .get(getTotalThreats);
