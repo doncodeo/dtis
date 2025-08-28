@@ -90,7 +90,7 @@ const reportInstrument = async (req, res) => {
 };
 
 /**
- * @desc    Fetch all public reports
+ * @desc    Fetch all public reports and a list of non-public instruments
  * @route   GET /api/reports
  * @access  Public
  * @param {object} req - Express request object
@@ -100,24 +100,37 @@ const fetchAllReports = async (req, res) => {
     const { page = 1, limit = 10, type } = req.query;
 
     try {
-        // Build query object
-        const query = type ? { type, isPublic: true } : { isPublic: true }; // Only fetch public reports
-
-        // Fetch reports with pagination
-        const reports = await Report.find(query)
+        // Query for public reports with pagination
+        const publicQuery = type ? { type, isPublic: true } : { isPublic: true };
+        const publicReports = await Report.find(publicQuery)
             .skip((page - 1) * limit)
             .limit(Number(limit))
-            .sort({ createdAt: -1 }); // Sort by most recent
+            .sort({ createdAt: -1 });
 
-        // Get total count for pagination
-        const total = await Report.countDocuments(query);
+        // Get total count of public reports for pagination
+        const totalPublic = await Report.countDocuments(publicQuery);
+
+        // Query for non-public reports
+        const nonPublicQuery = type ? { type, isPublic: false } : { isPublic: false };
+        const nonPublicReports = await Report.find(nonPublicQuery)
+            .select('instrument type reviews') // Select only necessary fields
+            .sort({ createdAt: -1 });
+
+        // Format non-public reports to show minimal information
+        const nonPublicReportsInfo = nonPublicReports.map(report => ({
+            instrument: report.instrument,
+            type: report.type,
+            reviewCount: report.reviewCount, // Use the virtual property
+            message: 'This instrument exists in our database but has not yet met the required number of reviews to be made public.'
+        }));
 
         res.status(200).json({
             success: true,
-            total,
+            totalPublic,
             currentPage: page,
-            totalPages: Math.ceil(total / limit),
-            data: reports,
+            totalPages: Math.ceil(totalPublic / limit),
+            publicReports,
+            nonPublicReports: nonPublicReportsInfo,
         });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server error', error });
