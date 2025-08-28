@@ -30,12 +30,12 @@ const reportSchema = new mongoose.Schema({
 
 // Create a virtual property `reviewCount`
 reportSchema.virtual('reviewCount').get(function() {
-    return this.reviews.length;
+    return this.reviews ? this.reviews.length : 0;
 });
 
 // Middleware to update riskLevel, isPublic and verificationStatus before saving
 reportSchema.pre('save', function (next) {
-    const reviewCount = this.reviews.length;
+    const reviewCount = this.reviews ? this.reviews.length : 0;
     if (reviewCount >= 100) {
         this.riskLevel = 'high';
     } else if (reviewCount >= 50 && reviewCount < 100) {
