@@ -65,7 +65,7 @@ describe('Admin Routes', () => {
         });
     });
 
-    describe('PUT /api/admin/reports/:id/set-visibility', () => {
+    describe('PATCH /api/admin/reports/:id/visibility', () => {
         it('should set the visibility of a report', async () => {
             const admin = new User({ name: 'Admin', email: 'admin@test.com', password: 'password', role: 'admin' });
             await admin.save();
@@ -79,10 +79,11 @@ describe('Admin Routes', () => {
             });
 
             const res = await request(app)
-                .put(`/api/admin/reports/${report._id}/set-visibility`)
-                .send({ isPublic: false });
+                .patch(`/api/admin/reports/${report._id}/visibility`)
+                .send({ forcePublic: false });
 
             expect(res.statusCode).toEqual(200);
+            expect(res.body.forcePublic).toBe(false);
             expect(res.body.isPublic).toBe(false);
         });
     });

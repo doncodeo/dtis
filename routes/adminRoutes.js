@@ -48,10 +48,10 @@ router.route('/reports/:id/verify')
 
 /**
  * @swagger
- * /api/admin/reports/{id}/set-visibility:
- *   put:
- *     summary: Set threat visibility
- *     description: Sets the visibility of a threat report.
+ * /api/admin/reports/{id}/visibility:
+ *   patch:
+ *     summary: Set threat visibility (Admin)
+ *     description: Sets the public visibility of a threat report, overriding the default logic.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -68,19 +68,19 @@ router.route('/reports/:id/verify')
  *           schema:
  *             type: object
  *             required:
- *               - isPublic
+ *               - forcePublic
  *             properties:
- *               isPublic:
+ *               forcePublic:
  *                 type: boolean
  *     responses:
  *       200:
- *         description: Report visibility set successfully.
+ *         description: Report visibility updated successfully.
  *       401:
  *         description: Unauthorized.
  *       404:
  *         description: Report not found.
  */
-router.route('/reports/:id/set-visibility')
-    .put(protect, adminOnly, setThreatVisibility);
+router.route('/reports/:id/visibility')
+    .patch(protect, adminOnly, setThreatVisibility);
 
 module.exports = router;

@@ -51,11 +51,11 @@ const verifyThreat = asyncHandler(async (req, res) => {
 });
 
 const setThreatVisibility = asyncHandler(async (req, res) => {
-    const { isPublic } = req.body;
+    const { forcePublic } = req.body;
     const report = await Report.findById(req.params.id);
 
     if (report) {
-        report.isPublic = isPublic;
+        report.forcePublic = forcePublic;
         const updatedReport = await report.save();
         res.json(updatedReport);
     } else {
