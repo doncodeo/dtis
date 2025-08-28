@@ -81,6 +81,6 @@ router.route('/reports/:id/verify')
  *         description: Report not found.
  */
 router.route('/reports/:id/visibility')
-    .patch(protect, adminOnly, setThreatVisibility);
+    .put(protect, adminOnly, setThreatVisibility);
 
 module.exports = router;
