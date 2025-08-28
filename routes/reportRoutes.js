@@ -3,7 +3,8 @@ const {
     reportInstrument,
     fetchAllReports,
     fetchAllReportsAdmin,
-    getInstrumentTypes
+    getInstrumentTypes,
+    getTotalThreats
 } = require('../controllers/reportController');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
 
@@ -131,5 +132,25 @@ router.route('/')
  */
 router.route('/admin')
     .get(protect, adminOnly, fetchAllReportsAdmin); // For fetching all reports
+
+/**
+ * @swagger
+ * /api/reports/stats/total:
+ *   get:
+ *     summary: Get total number of public threats
+ *     description: Retrieves the total number of reports that are marked as public.
+ *     responses:
+ *       200:
+ *         description: Total number of public threats retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: integer
+ */
+router.route('/stats/total')
+    .get(getTotalThreats);
 
 module.exports = router;

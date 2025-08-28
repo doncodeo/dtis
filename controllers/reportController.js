@@ -166,9 +166,24 @@ const getInstrumentTypes = (req, res) => {
     }
 };
 
+/**
+ * @desc    Get total number of public threats
+ * @route   GET /api/reports/stats/total
+ * @access  Public
+ */
+const getTotalThreats = async (req, res) => {
+    try {
+        const total = await Report.countDocuments({ isPublic: true });
+        res.status(200).json({ success: true, total });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error });
+    }
+};
+
 module.exports = { 
     reportInstrument,
     fetchAllReports,
     fetchAllReportsAdmin,
-    getInstrumentTypes
+    getInstrumentTypes,
+    getTotalThreats
 };
