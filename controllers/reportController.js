@@ -167,14 +167,21 @@ const getInstrumentTypes = (req, res) => {
 };
 
 /**
- * @desc    Get total number of public threats
+ * @desc    Get threat statistics
  * @route   GET /api/reports/stats/total
  * @access  Public
  */
 const getTotalThreats = async (req, res) => {
     try {
-        const total = await Report.countDocuments({ isPublic: true });
-        res.status(200).json({ success: true, total });
+        const totalThreats = await Report.countDocuments();
+        const verifiedThreats = await Report.countDocuments({ verificationStatus: 'verified' });
+        res.status(200).json({
+            success: true,
+            stats: {
+                totalThreats,
+                verifiedThreats
+            }
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server error', error });
     }
